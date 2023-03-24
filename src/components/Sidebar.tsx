@@ -16,7 +16,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div className="p-6">
       <button
-        className="ml-auto block w-fit p-3 text-2xl text-white lg:hidden"
+        className="ml-auto block w-fit p-3 text-2xl text-black lg:hidden"
         onClick={closeSidebar}
       >
         <Icon icon="material-symbols:close" />
