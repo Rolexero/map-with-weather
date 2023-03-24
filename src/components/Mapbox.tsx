@@ -50,9 +50,7 @@ export const Mapbox: React.FC<MapboxProps> = ({
   // const [showPopup, setShowPopup] = useState(false);
   const Geocoder = (): any => {
     const geoMap = new MapboxGeocoder({
-      accessToken: process.env.REACT_APP_MAP_KEY
-        ? process.env.REACT_APP_MAP_KEY
-        : "",
+      accessToken: process.env._MAP_KEY ? process.env._MAP_KEY : "",
       marker: false,
       collapsed: true,
       countries: "ng",

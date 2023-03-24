@@ -63,7 +63,11 @@ export const Layout: React.FC<LayoutProps> = ({
           showNav ? "-left-0" : "-left-full"
         }   fixed z-[3000] h-full  min-w-[262px] bg-white transition-all lg:relative lg:left-0`}
       >
-        <Sidebar filteredItems={filteredItems} onClick={onClick} />
+        <Sidebar
+          filteredItems={filteredItems}
+          onClick={onClick}
+          closeSidebar={() => setShowNav(!showNav)}
+        />
       </div>
       <div className=" flex w-full flex-1 overflow-x-auto">
         <div className=" flex h-full  w-full flex-1 flex-col overflow-hidden bg-[#F8FAFB]">
