@@ -10,21 +10,43 @@ import Map, {
 import MapboxGeocoder, { Result } from "@mapbox/mapbox-gl-geocoder";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import data from "../data.json";
 
-interface MapboxProps {}
+interface MapboxProps {
+  viewState: { longitude: number; latitude: number; id: number };
+  weatherDetails: {
+    name: string;
+    sys: { country: string; sunrise: number; sunset: number };
+    main: {
+      temp: string;
+      feels_like: string;
+      temp_min: string;
+      temp_max: string;
+    };
+    weather: { description: string }[];
+  };
+  setViewState: React.Dispatch<
+    React.SetStateAction<{
+      longitude: number;
+      latitude: number;
+      name: string;
+      id: number;
+    }>
+  >;
+}
 
-export const Mapbox: React.FC<MapboxProps> = ({}) => {
+export const Mapbox: React.FC<MapboxProps> = ({
+  viewState,
+  setViewState,
+  weatherDetails,
+}: MapboxProps) => {
+  const [currentId, setcurrentId] = useState(null);
   const geolocateControlRef = React.useCallback((ref: any) => {
     if (ref) {
       // Activate as soon as the control is loaded
       ref.trigger();
     }
   }, []);
-  const [viewState, setViewState] = useState({
-    longitude: 9.59395988695573,
-    latitude: 8.10530640960786,
-    zoom: 10,
-  });
   // const [showPopup, setShowPopup] = useState(false);
   const Geocoder = (): any => {
     const geoMap = new MapboxGeocoder({
@@ -34,19 +56,13 @@ export const Mapbox: React.FC<MapboxProps> = ({}) => {
       marker: false,
       collapsed: true,
       countries: "ng",
-      render: function () {
-        return `<div>
-        <p>lagos</p>
-                <p>lagos</p>
-
-        </div>`;
-      },
     });
     useControl(() => geoMap);
-    geoMap.on("result", (e) => {
-      console.log(e);
-      //    dispatch(setLocation(e.result.text))
-    });
+    geoMap.on("result", (e) => {});
+  };
+
+  const handleClickHandler = (id: any) => {
+    setcurrentId(id);
   };
 
   return (
@@ -63,11 +79,80 @@ export const Mapbox: React.FC<MapboxProps> = ({}) => {
       >
         <Marker
           latitude={viewState.latitude}
-          longitude={viewState.latitude}
+          longitude={viewState.longitude}
           anchor="bottom"
+          onClick={() => handleClickHandler(viewState.id)}
         ></Marker>
+        {viewState.id === currentId && (
+          <Popup
+            latitude={viewState.latitude}
+            closeButton={true}
+            closeOnClick={false}
+            anchor="top"
+            longitude={viewState.longitude}
+          >
+            <div className="card">
+              <h2 className="label">
+                <span>{weatherDetails.name ? weatherDetails.name : ""}</span>,{" "}
+                <span id="country">
+                  {weatherDetails.sys.country ? weatherDetails.sys.country : ""}
+                </span>
+              </h2>
+              {/* <p><span id='day'>Day</span>, <span id='month'>Month</span> */}
+              <h2>
+                <p className="label">
+                  Sunrise:{" "}
+                  {new Date(
+                    weatherDetails.sys.sunrise * 1000
+                  ).toLocaleDateString("en")}
+                </p>
+                <p className="label">
+                  Sunset:{" "}
+                  {new Date(
+                    weatherDetails.sys.sunset * 1000
+                  ).toLocaleDateString("en")}
+                </p>
+
+                <p className="label">
+                  {weatherDetails.main.temp ? weatherDetails.main.temp : ""}
+                  <span>°C</span>
+                </p>
+              </h2>
+              <p className="label">
+                Feel like:{" "}
+                <span id="feelsLike">
+                  {weatherDetails.main.feels_like
+                    ? weatherDetails.main.feels_like
+                    : ""}
+                </span>
+              </p>
+              <p className="label">
+                Temp-max:{" "}
+                <span id="tempMax">
+                  {weatherDetails.main.temp_max
+                    ? weatherDetails.main.temp_max
+                    : ""}
+                </span>
+              </p>
+              <p className="label">
+                {" "}
+                | Temp-min:{" "}
+                <span id="tempMin">
+                  {weatherDetails.main.temp_min
+                    ? weatherDetails.main.temp_min
+                    : ""}
+                </span>
+              </p>
+              <p className="label">
+                Description: <span id="description"></span>
+                {weatherDetails.weather[0].description
+                  ? weatherDetails.weather[0].description
+                  : ""}
+              </p>
+            </div>
+          </Popup>
+        )}
         <Geocoder />
-        <GeolocateControl position="bottom-right" ref={geolocateControlRef} />
         <NavigationControl position="bottom-right" />
       </Map>
     </div>

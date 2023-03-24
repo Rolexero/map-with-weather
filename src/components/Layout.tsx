@@ -1,12 +1,38 @@
-import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Icon } from "@iconify/react";
 import { Sidebar } from "./Sidebar";
+import data from "../data.json";
+import { StateTypes } from "../types";
 
-interface LayoutProps {}
+interface LayoutProps {
+  onClick: ({ lat, long }: StateTypes) => void;
+  children: React.ReactNode;
+}
 
 export const Layout: React.FC<LayoutProps> = ({
   children,
-}: PropsWithChildren<{ additionalheader?: JSX.Element }>) => {
+  onClick,
+}: LayoutProps) => {
+  const [inputValue, setInputValue] = useState("");
+
+  // * handle searchfield
+  const SearchInputHandler: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback(({ currentTarget }) => {
+      setInputValue(currentTarget.value);
+    }, []);
+
+  const filteredItems = data?.filter((i) => {
+    if (i?.name?.toLowerCase().includes(inputValue.toLowerCase())) {
+      return i;
+    }
+  });
+
   const contentsRef = useRef<HTMLElement>(null);
   const [showNav, setShowNav] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -37,11 +63,21 @@ export const Layout: React.FC<LayoutProps> = ({
           showNav ? "-left-0" : "-left-full"
         }   fixed z-[3000] h-full  min-w-[262px] bg-white transition-all lg:relative lg:left-0`}
       >
-        <Sidebar />
+        <Sidebar filteredItems={filteredItems} onClick={onClick} />
       </div>
       <div className=" flex w-full flex-1 overflow-x-auto">
         <div className=" flex h-full  w-full flex-1 flex-col overflow-hidden bg-[#F8FAFB]">
           <div className="fixed z-[1000] w-full md:w-[80%]">
+            <div className="flex mx-auto items-center justify-center py-4  bg-white">
+              <input
+                type="text"
+                placeholder="search"
+                value={inputValue}
+                onChange={(e) => SearchInputHandler(e)}
+                className="px-2"
+                autoComplete=""
+              />
+            </div>
             <button
               onClick={() => setShowNav(!showNav)}
               className="absolute top-4 left-5 z-50 cursor-pointer rounded-md border-[1px] p-1 text-4xl lg:hidden"

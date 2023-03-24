@@ -1,9 +1,9 @@
 [
-    { "id": 1, "name": "Abia", "lat": 5.532003041, "long": 7.486002487 },
+    { "id": 1, "name": "Abia", "lat": 5.5324032, "long": 7.4924165 },
     { "id": 2, "name": "Adamawa", "lat": 10.2703408, "long": 13.2700321 },
     { "id": 3, "name": "Akwa Ibom", "lat": 5.007996056, "long": 7.849998524 },
     { "id": 4, "name": "Anambra", "lat": 6.210433572, "long": 7.06999711 },
-    { "id": 5, "name": "Ekiti", "lat": 7.630372741, "long": 5.219980834 },
+    { "id": 5, "name": "Ekiti", "lat": 7.6232482, "long": 5.22274 },
     { "id": 6, "name": "Enugu", "lat": 6.867034321, "long": 7.383362995 },
     { "id": 7, "name": "Lagos", "lat": 6.443261653, "long": 3.391531071 },
     { "id": 8, "name": "Nassarawa", "lat": 8.490423603, "long": 8.5200378 },
