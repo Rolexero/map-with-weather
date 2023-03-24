@@ -28,14 +28,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           return (
             <button
               key={id}
-              onClick={() =>
+              onClick={() => {
+                closeSidebar();
                 onClick({
                   lat: state.lat,
                   long: state.long,
                   name: state.name,
                   id: state.id,
-                })
-              }
+                });
+              }}
             >
               {state.name}
             </button>
